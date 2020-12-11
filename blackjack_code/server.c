@@ -8,11 +8,10 @@
 #include <stdio.h>
 #include <time.h>
 #include <fcntl.h>
+#include "blackjack.h"
 
-#define PORTNUM 50013
-
-static const char *RPS[] = { "바위", "가위", "보" };
-static const char *RESULT[] = { "승리", "패배", "무승부" };
+#define PORTNUM 9000
+//블랙잭 게임
 
 //컴퓨터의 가위바위보 값 결정
 int ComRps(void);
@@ -24,15 +23,18 @@ int RpsResult(int user, int com);
 //게임 기록을 파일에 입력하는 함수 (초기화 X, 직접 초기화)
 void WriteLog(char str[]);
 
-
 // 전적 기록을 파일에 입력하는 함수 (서버 재가동시 초기화)
 void MyStat(int win, int lose, int draw, int count);
 
-int main(int argc, char* argv[]) {
+int players[2] = {0,0}; // user vs computer
+int main(void) {
+
     char buf[256];
     struct sockaddr_in sin, cli;
     int sd, ns, clientlen = sizeof(cli);
-    int com, user; // 컴퓨터 및 사용자의 가위바위보 값, [가위(1), 바위(2), 보(3)]
+    
+    card_init();
+    int com, user; // 컴퓨터 및 사용자의 블랙잭
     int win = 0; // 승리 횟수
     int lose = 0; // 패배 횟수
     int draw = 0; // 무승부 횟수
@@ -48,8 +50,8 @@ int main(int argc, char* argv[]) {
     // 주소 초기화 후 IP 주소와 포트 지정
     memset((char *)&sin, '\0', sizeof(sin));
     sin.sin_family = AF_INET;
-    sin.sin_port = htons(atoi(argv[2])); // 포트 넘버 연결
-    sin.sin_addr.s_addr = inet_addr(argv[1]); // ip 주소 연결
+    sin.sin_port = htons(PORTNUM); // 포트 넘버 연결
+    sin.sin_addr.s_addr = inet_addr("127.0.0.1"); // ip 주소 연결
 
     // 소켓과 서버 주소를 바인딩
     if (bind(sd, (struct sockaddr *)&sin, sizeof(sin))) {
@@ -57,7 +59,7 @@ int main(int argc, char* argv[]) {
         exit(1);
     }
 
-    // 연결 대기열 5개 생성
+    // 최대 5명
     if (listen(sd, 5) == -1) {
         perror("listen");
         exit(1);
@@ -71,8 +73,8 @@ int main(int argc, char* argv[]) {
             exit(1);
         }
 
-        // 가위바위보 게임 시작 출력
-        sprintf(buf, "\n===============가위바위보 게임===============\n\n1(가위), 2(>바위), 3(보) 중 하나를 입력하십시오.\n");
+        // start black jack game
+        sprintf(buf, "\n===============BLACKJACK  GAME===================\n\n");
         // 데이터 송신 (시작 화면 출력)
         if (send(ns, buf, strlen(buf) + 1, 0) == -1) {
             perror("send");
@@ -84,10 +86,7 @@ int main(int argc, char* argv[]) {
             perror("recv");
             exit(1);
         }
-
-        user = atoi(buf); // 사용자 가위바위보 값 결정 (아스키 -> 인티져)
-        com = ComRps(); // 컴퓨터 가위바위보 값 결정 (rand함수)
-                        // 가위바위보 결과
+        who_win();
         i = RpsResult(user, com);
 
         // 가위바위보 결과 출력
@@ -118,6 +117,42 @@ int main(int argc, char* argv[]) {
     close(sd);
 
     return 0;
+}
+
+void init_card(){
+    int n = 1;
+    for(int i = 0; i < 13; i++){// spades
+        card[i].type = 's';
+        if( n == 10 )
+            card[i].num = n;
+        else
+            card[i].num = n++;
+    }
+    n = 0;
+    for(int i = 0; i < 13; i++){// diamonds
+        card[i].type = 'd';
+        if( n == 10 )
+            card[i].num = n;
+        else
+            card[i].num = n++;
+    }
+    n = 0;
+    for(int i = 0; i < 13; i++){//hearts
+        card[i].type = 'h';
+        if( n == 10 )
+            card[i].num = n;
+        else
+            card[i].num = n++;
+    }
+    n = 0;
+    for(int i = 0; i < 13; i++){//clubs
+        card[i].type = 'c';
+        if( n == 10 )
+            card[i].num = n;
+        else
+            card[i].num = n++;
+    }
+        
 }
 
 // 컴퓨터의 가위바위보 값 결정

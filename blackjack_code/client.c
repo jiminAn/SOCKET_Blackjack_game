@@ -6,17 +6,16 @@
 #include <stdio.h>
 #include <string.h>
 
-
-// 가위바위보 규칙을 설명해주는 함수
+#define PORTNUM 9000
+// rule of blackjack
 void Rule();
 
-int main(int argc, char *argv[]) {
+int main(void) {
     int sd;
     char buf[256];
     struct sockaddr_in sin;
 
-    // 가위바위보 규칙
-    Rule();
+    Rule();// explain rule of blackjack
 
     // 소켓 파일 기술자 생성
     if ((sd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
@@ -27,8 +26,8 @@ int main(int argc, char *argv[]) {
     // 주소 초기화 후 IP주소와 포트 지정
     memset((char *)&sin, '\0', sizeof(sin));
     sin.sin_family = AF_INET;
-    sin.sin_port = htons(atoi(argv[2]));
-    sin.sin_addr.s_addr = inet_addr(argv[1]);
+    sin.sin_port = htons(PORTNUM);
+    sin.sin_addr.s_addr = inet_addr("127.0.0.1");
 
     // 클라이언트가 서버에 접속 요청
     if (connect(sd, (struct sockaddr *)&sin, sizeof(sin))) {
@@ -36,7 +35,7 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    // 데이터 수신 (가위바위보 게임 시작 출력을 받아옴)
+    // receive data : <buf : start black jack game>
     if (recv(sd, buf, sizeof(buf), 0) == -1) {
         perror("recv");
         exit(1);
@@ -68,11 +67,10 @@ int main(int argc, char *argv[]) {
 
 void Rule() {
 
-  
     printf("\n");
-    printf(" ========가위바위보 게임=========\n");
-    printf(" | 가위>보>주먹 주먹>가위>보      |\n");
-    printf(" --------------------------------\n");
+    printf(" ========RULE OF BLACK JACK GAME=========\n");
+    printf(" Players are each dealt two cards, one up (exposed) and one down (hidden). The value of cards two through ten is their pip value (2 through 10). Face cards (Jack, Queen, and King) are all worth ten. Aces can be worth one or eleven. A hand's value is the sum of the card values. Players are allowed to draw additional cards to improve their hands.If the player is dealt an Ace and a ten-value card (called a blackjack or natural. If the player exceeds a sum of 21 busts, the player loses.");
+    printf("\n\n\n");
 
     
 }
