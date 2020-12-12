@@ -22,4 +22,6 @@ int givePoint(int i);//카드 랜덤 선택(단, 중복없이)
 int cardRound(int point, int n); //카드 중복 없이 할당
 int randfor2();//for Ace cards
 bool checkRepeat(Card c);// 카드 중복 확인
+void show_player_card();
+void show_com_card();
 

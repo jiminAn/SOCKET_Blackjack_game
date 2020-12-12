@@ -19,7 +19,10 @@ int main(void) {
     int user_point = 0;
     struct sockaddr_in sin, cli;
     int sd, ns, clientlen = sizeof(cli);
-    int com, user;
+    int s1, s2; // s1: 컴 이김 , s2 : 컴 짐
+    s1 = 1;
+    s2 = 2;
+
     
     
     // 소켓 파일 기술자 생성
@@ -54,7 +57,7 @@ int main(void) {
     }
 
     // 블랙잭 게임 시작 출력
-    sprintf(buf, "=====Welcome to SimpleBlackJack!=====\n\n\nAnytime you can press Ctrl+C to exit.\nEnjoy! Press Enter to go on......\n\n=====================================\n\n");
+    sprintf(buf, "=====블랙잭 게임에 오신걸 환영합니다=====\n\n\nAnytime you Ctrl+C를 누를 경우 종료 가능합니다.\n\n\n=====================================\n\n");
     // 데이터 송신 (시작 화면 출력)
     if (send(ns, buf, strlen(buf) + 1, 0) == -1) {
         perror("send");
@@ -69,8 +72,28 @@ int main(void) {
 
     user_point = atoi(buf);//사용자 점수 저장
     
-    // 컴퓨터 블랙잭 카드 첫장 뽑기 & 컴퓨터 점수
+    // 컴퓨터 블랙잭 카드 두장 뽑기 & 컴퓨터 점수
     com_point = cardRound(com_point,1);
+    com_point = cardRound(com_point,1);
+    printf("computer point : %d \n", com_point);
+    
+    while(com_point < 17){
+        com_point = cardRound(com_point,1);
+        printf("computer point : %d \n", com_point);
+    }
+    if( com_point == 21)
+        //sprintf(buf, "컴퓨터의 BLOCKJACK!! 당신의 패배입니다");
+        sprintf(buf, "%d", s1);
+    else if (com_point > 21)
+        //sprintf(buf, "컴퓨터의 %d로 초과했습니다! 당신의 승리입니다", com_point);
+        sprintf(buf, "%d", s2);
+    else
+        sprintf(buf, "%d", com_point);
+    // 데이터 송신 (컴퓨터 블랙잭 값 보내기)
+    if (send(ns, buf, strlen(buf) + 1, 0) == -1) {
+        perror("send");
+        exit(1);
+    }
     
     // 소켓 파일 기술자 종료
     close(ns);

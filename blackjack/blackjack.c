@@ -8,9 +8,9 @@ int cardRound(int point, int n){
  
     int points = 0;
     if( n == 0)
-        printf("_____player turn_____\n\n");
+        printf("_____player card_____\n\n");
     else
-        printf("_____computer turn_____\n\n");
+        printf("_____computer card_____\n\n");
     points = givePoint(n);
     point += points;
     return point;
@@ -37,13 +37,14 @@ int givePoint(int i){
     else{
         if(i == 0){// 플레이어 카드 할당 & 저장
             p_card[p_cnt].type = g_card.type;
-            p_card[p_cnt].num = g_card.num;
-            show_card(p_card[p_cnt++]);
+            p_card[p_cnt++].num = g_card.num;
+            show_player_card();
+            
         }
         if(i == 1){ // 컴퓨터 카드 할당 & 저장
             com_card[com_cnt].type = g_card.type;
-            com_card[com_cnt].num = g_card.num;
-            show_card(com_card[p_cnt++]);
+            com_card[com_cnt++].num = g_card.num;
+            show_com_card();
         }
         
         if(g_card.num < 11){
@@ -79,6 +80,24 @@ int randfor2(){
         return 1;
     else if(chosen == 2)
         return 11;
+}
+void show_player_card(){
+    for(int i = 0; i < p_cnt; i++)
+        show_card(p_card[i]);
+}
+void show_com_card(){
+    for(int i = 0; i < com_cnt; i++)
+        show_card(com_card[i]);
+//    show_card(com_card[0]);
+//    for(int i = 1; i < com_cnt; i++){
+//        printf("********\n");
+//        printf("*------*\n");
+//        printf("*hidden*\n");
+//        printf("*-card-*\n");
+//        printf("*------*\n");
+//        printf("********\n");
+//    }
+    
 }
 // 카드 인터페이스 보여주기
 void show_card(Card c){
