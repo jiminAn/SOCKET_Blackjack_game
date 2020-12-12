@@ -65,21 +65,19 @@ int main(void) {
         exit(1);
     }
 
-    // 반복 서버
-    while (100) {
-        // 클라이언트의 접속 허용
-        if ((ns = accept(sd, (struct sockaddr *)&cli, &clientlen)) == -1) {
-            perror("accept");
-            exit(1);
-        }
+    // 클라이언트의 접속 허용
+    if ((ns = accept(sd, (struct sockaddr *)&cli, &clientlen)) == -1) {
+        perror("accept");
+        exit(1);
+    }
 
-        // start black jack game
-        sprintf(buf, "\n===============BLACKJACK  GAME===================\n\n");
-        // 데이터 송신 (시작 화면 출력)
-        if (send(ns, buf, strlen(buf) + 1, 0) == -1) {
-            perror("send");
-            exit(1);
-        }
+    // start black jack game
+    sprintf(buf, "\n===============BLACKJACK GAME===================\n\n");
+    // 데이터 송신 (시작 화면 출력)
+    if (send(ns, buf, strlen(buf) + 1, 0) == -1) {
+        perror("send");
+        exit(1);
+    }
 
         // 데이터 수신 (buf 값(가위, 바위, 보)을 가져옴)
         if (recv(ns, buf, sizeof(buf), 0) == -1) {
