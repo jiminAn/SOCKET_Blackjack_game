@@ -1,0 +1,2 @@
+PLAYER : 19points | COMPUTER : 19points !DRAW!  
+PLAYER : 21points | COMPUTER : 19points !PLAYER WIN! 

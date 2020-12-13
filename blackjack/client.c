@@ -13,13 +13,13 @@
 void Rule();
 int main(void) {
     srand(time(NULL));
-    Card *tmp_c;
     char choice;
     int user_point = 0;
     int com_point = 0;
     int sd;
     char buf[256];
     struct sockaddr_in sin;
+    int result; // 0:draw 1:win 2:fail(player)
     
     Rule();
 
@@ -53,14 +53,14 @@ int main(void) {
     user_point = cardRound(user_point, 0);
     printf("player point : %d \n", user_point);
     //점수 : 정수->char *저장
-    sprintf(buf, "%d", user_point);
+   // sprintf(buf, "%d", user_point);
     
     
-    // 데이터 송신 (buf 값을 보냄)
-    if (send(sd, buf, strlen(buf) + 1, 0) == -1) {
-        perror("send");
-        exit(1);
-    }
+//    // 데이터 송신 (buf 값을 보냄)
+//    if (send(sd, buf, strlen(buf) + 1, 0) == -1) {
+//        perror("send");
+//        exit(1);
+//    }
     // 한 장 더 뽑을지 물어보기
     do{
         printf("Do you want to hit, player? y or n\n");
@@ -71,6 +71,7 @@ int main(void) {
             printf("player point : %d \n", user_point);
         }
         if( user_point > 21){
+            result = 2;
             printf("플레이어 EXCEEDED 21!! 당신의 패배입니다");
             // 소켓 파일 기술자 종료
             close(sd);
@@ -88,26 +89,47 @@ int main(void) {
     }
     com_point = atoi(buf);
    // printf("compoint : %d \n", com_point);
-    if( com_point == 1 )
-        printf("컴퓨터의 BLOCKJACK!! 당신의 패배입니다");
-    else if(com_point == 2)
+    if( com_point == 1 && user_point != 21 ){
+        printf("컴퓨터의 BLACKJACK!! 당신의 패배입니다");
+        result = 2;
+    }
+    else if(com_point == 2){
         printf("컴퓨터의 EXCEEDED 21!! 당신의 승리입니다");
+        result = 1;
+    }
     else{
         if( user_point > com_point ){
             printf("player %d points | computer %d points\n",user_point, com_point);
+            result = 1;
             printf("PLAYER WIN!");
         }
         else if( user_point < com_point ){
             printf("player %d points | computer %d points\n",user_point, com_point);
-            printf("PLAYER FAIL!");
+            result = 2;
+            printf("PLAYER LOSE!");
         }
         else{
             printf("player %d points | computer %d points\n",user_point, com_point);
+            result = 0;
             printf("PLAYER AND COMPUTER DRAW!");
         }
             
     }
+    sprintf(buf, "%d", user_point);
+    // 데이터 송신 (buf 값을 보냄)
+    if (send(sd, buf, strlen(buf) + 1, 0) == -1) {
+        perror("send");
+        exit(1);
+    }
     
+//    printf("result : %d \n", result);
+//    sprintf(buf, "%d", result);
+//    printf("result_buf : %s \n", buf);
+//    // 데이터 송신 (buf 값을 보냄)
+//    if (send(sd, buf, strlen(buf) + 1, 0) == -1) {
+//        perror("send");
+//        exit(1);
+//    }
     // 소켓 파일 기술자 종료
     close(sd);
 
@@ -119,13 +141,13 @@ void Rule(){
   
     printf("\n");
     printf("===================블랙잭 게임 설명===================\n");
-    printf(" | 합이 21에 가까운 사람이 이기는 게임입니다 |\n");
-    printf(" | 첫 번째 카드는 사용자와 컴퓨터 모두 오픈합니다 |\n");
-    printf(" | 두 번째 카드 부터는 각 user만 볼 수 있는 hidden card입니다 |\n");
-    printf(" | 자신이 가지고 있는 카드의 총 합을 턴 마다 계산해서\n");
-    printf("   21이 넘지 않는다면 게임을 계속할 수 있습니다 |\n");
-    printf(" | 사용자는 go/stop을 할 수 있습니다 |\n");
+    printf(" | 합이 21에 가까운 사람이 이기는 게임입니다       |\n");
+    printf(" | 첫 번째 카드는 사용자와 컴퓨터 모두 오픈합니다    |\n");
+    printf(" | 자신이 가지고 있는 카드의 총 합을 턴 마다 계산해서 |\n");
+    printf(" | 21이 넘지 않는다면 게임을 계속할 수 있습니다     |\n");
+    printf(" | 사용자는 go/stop을 할 수 있습니다            |\n");
     printf(" | 21이 초과할 경우 상대 패와 상관없이 패배하게됩니다 |\n");
+    printf(" | Ctrl+c할 경우 게임을 종료할 수 있습니다.       |\n");
     printf(" --------------------------------\n");
 
     
