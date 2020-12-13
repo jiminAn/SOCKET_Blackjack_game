@@ -46,7 +46,7 @@
 
 
 ## 2.3 소켓 함수의 호출 순서
-![image-20200930195006846](https://github.com/jiminAn/UNIX_final/blob/master/img/1.png)
+![image-20200930195006846](https://github.com/jiminAn/UNIX_final/blob/main/img/1.png)
 
 ## 3. 사용된 기술
 - 소켓 프로그래밍을 이용한 서버/클라이언트 프로그램
@@ -64,7 +64,7 @@
  7. log.txt에 게임 기록/ mystat.txt에 전적 기록
  
  ## 5. 사용 예
- ![image-20200930195006846](https://github.com/jiminAn/UNIX_final/blob/master/img/2.png)
+ ![image-20200930195006846](https://github.com/jiminAn/UNIX_final/blob/main/img/2.png)
 
 
 
