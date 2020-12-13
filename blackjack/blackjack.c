@@ -12,8 +12,8 @@ int cardRound(int point, int n){
     else
         printf("_____computer card_____\n\n");
     points = givePoint(n);
-    point += points;
-    return point;
+    //printf("cardRound : %d \n", points);
+    return point + points;
     
 }
 // 카드 랜덤 선택(단, 중복 없이)
@@ -171,5 +171,12 @@ void show_card(Card c){
                 printf("*******\n");
                 break;
             }
+    }
+}
+void check_init(){// 카드 중복 초기화
+    for(int i = 0; i < 4; i++){
+        for(int j = 0; j < 13; j++){
+            check[i][j] = false;
+        }
     }
 }

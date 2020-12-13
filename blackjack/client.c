@@ -9,8 +9,9 @@
 #include "blackjack.h"
 
 #define PORTNUM 9000
-// 블랙잭 규칙을 설명해주는 함수
-void Rule();
+
+void Rule();// 블랙잭 규칙을 설명해주는 함수
+
 int main(void) {
     srand(time(NULL));
     char choice;
@@ -21,7 +22,6 @@ int main(void) {
     struct sockaddr_in sin;
     int result; // 0:draw 1:win 2:fail(player)
     
-    Rule();
 
     // 소켓 파일 기술자 생성
     if ((sd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
@@ -47,20 +47,13 @@ int main(void) {
         exit(1);
     }
     printf("%s\n", buf);
+    Rule();// 블랙잭 규칙 설명
 
     //사용자 블랙잭 카드 두 장 뽑기
     user_point = cardRound(user_point, 0);
     user_point = cardRound(user_point, 0);
     printf("player point : %d \n", user_point);
-    //점수 : 정수->char *저장
-   // sprintf(buf, "%d", user_point);
-    
-    
-//    // 데이터 송신 (buf 값을 보냄)
-//    if (send(sd, buf, strlen(buf) + 1, 0) == -1) {
-//        perror("send");
-//        exit(1);
-//    }
+
     // 한 장 더 뽑을지 물어보기
     do{
         printf("Do you want to hit, player? y or n\n");
@@ -88,7 +81,7 @@ int main(void) {
         exit(1);
     }
     com_point = atoi(buf);
-   // printf("compoint : %d \n", com_point);
+    // 승패 출력
     if( com_point == 1 && user_point != 21 ){
         printf("컴퓨터의 BLACKJACK!! 당신의 패배입니다");
         result = 2;
@@ -116,20 +109,12 @@ int main(void) {
             
     }
     sprintf(buf, "%d", user_point);
-    // 데이터 송신 (buf 값을 보냄)
+    // 데이터 송신 (사용자 총합 값을 보냄)
     if (send(sd, buf, strlen(buf) + 1, 0) == -1) {
         perror("send");
         exit(1);
     }
-    
-//    printf("result : %d \n", result);
-//    sprintf(buf, "%d", result);
-//    printf("result_buf : %s \n", buf);
-//    // 데이터 송신 (buf 값을 보냄)
-//    if (send(sd, buf, strlen(buf) + 1, 0) == -1) {
-//        perror("send");
-//        exit(1);
-//    }
+
     // 소켓 파일 기술자 종료
     close(sd);
 

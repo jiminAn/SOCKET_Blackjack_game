@@ -11,8 +11,8 @@ typedef struct card{
     int num;  // 카드 숫자 Ace,2~10,J,Q,K
 }Card;
 
-Card p_card[10]; // 플레이어 카드 기억
-Card com_card[10]; // 컴퓨터 카드 기억
+Card p_card[100]; // 플레이어 카드 기억
+Card com_card[100]; // 컴퓨터 카드 기억
 int p_cnt;
 int com_cnt;
 
@@ -22,6 +22,6 @@ int givePoint(int i);//카드 랜덤 선택(단, 중복없이)
 int cardRound(int point, int n); //카드 중복 없이 할당
 int randfor2();//for Ace cards
 bool checkRepeat(Card c);// 카드 중복 확인
-void show_player_card();
-void show_com_card();
-
+void show_player_card(); // 플레이어 카드 보여주기
+void show_com_card(); // 컴퓨터 카드 보여주기
+void check_init(); // 게임 재시작시 중복 카드 초기화
