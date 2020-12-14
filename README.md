@@ -1,4 +1,4 @@
-# UNIX Programming Project 2
+# UNIX Programming 프로젝트2
 
 ## 1. 주제 설명
 ### 주제
